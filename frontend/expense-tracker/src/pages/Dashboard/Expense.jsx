@@ -8,6 +8,7 @@ import { LuPlus, LuDownload } from 'react-icons/lu';
 import TransactionInfoCard from '../../components/Cards/TransactionInfoCard';
 import moment from 'moment';
 import toast from 'react-hot-toast';
+import EmojiPicker from 'emoji-picker-react';
 
 const Expense = () => {
   useUserAuth();
@@ -21,6 +22,11 @@ const Expense = () => {
     amount: '',
     date: '',
   });
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  const categories = [
+    'Housing', 'Food', 'Transportation', 'Entertainment', 'Shopping', 'Utilities', 'Healthcare', 'Other'
+  ];
 
   const fetchExpenses = async () => {
     if (loading) return;
@@ -116,23 +122,46 @@ const Expense = () => {
 
         {showAddForm && (
           <div className="card mb-6">
-            <h3 className="text-lg mb-4">Add New Expense</h3>
+            <h3 className="text-lg mb-4 font-medium text-gray-800">Add New Expense</h3>
             <form onSubmit={handleAddExpense}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input
-                  value={formData.icon}
-                  onChange={({ target }) => setFormData({ ...formData, icon: target.value })}
-                  label="Icon (optional)"
-                  placeholder="e.g., 🍔"
-                  type="text"
-                />
-                <Input
-                  value={formData.category}
-                  onChange={({ target }) => setFormData({ ...formData, category: target.value })}
-                  label="Category"
-                  placeholder="e.g., Food"
-                  type="text"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {/* Emoji Picker Field */}
+                <div className="relative">
+                  <label className="text-[13px] text-slate-800 block mb-1">Icon (optional)</label>
+                  <div
+                    className="input-box flex items-center gap-2 cursor-pointer bg-slate-50 border border-slate-200 rounded p-2"
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                  >
+                    <span className="text-xl">{formData.icon || '🍔'}</span>
+                    <span className="text-sm text-slate-500">Click to choose icon</span>
+                  </div>
+                  {showEmojiPicker && (
+                    <div className="absolute top-16 z-50 shadow-xl">
+                      <EmojiPicker
+                        onEmojiClick={(emojiObject) => {
+                          setFormData({ ...formData, icon: emojiObject.emoji });
+                          setShowEmojiPicker(false);
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Category Dropdown */}
+                <div>
+                  <label className="text-[13px] text-slate-800 block mb-1">Category</label>
+                  <select
+                    className="w-full bg-transparent outline-none border border-slate-200 rounded p-2.5 text-slate-700 bg-slate-50 focus:border-primary focus:ring-1 focus:ring-primary"
+                    value={formData.category}
+                    onChange={({ target }) => setFormData({ ...formData, category: target.value })}
+                  >
+                    <option value="" disabled>Select a category</option>
+                    {categories.map((cat, idx) => (
+                      <option key={idx} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                </div>
+
                 <Input
                   value={formData.amount}
                   onChange={({ target }) => setFormData({ ...formData, amount: target.value })}

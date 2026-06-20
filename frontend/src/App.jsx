@@ -9,7 +9,7 @@ import Home from './pages/Dashboard/Home';
 import Income from './pages/Dashboard/Income';
 import Expense from './pages/Dashboard/Expense';
 import AuthLayout from './components/layouts/AuthLayout';
-import UserProvider from './context/userContext';
+import UserProvider from './context/UserContext';
 import axiosInstance from './utils/axiosInstance';
 import { API_PATHS } from './utils/apiPaths';
 
